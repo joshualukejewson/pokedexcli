@@ -18,3 +18,7 @@ func commandHelp() error {
 	}
 	return nil
 }
+
+func commandMap(config *config) {
+
+}
