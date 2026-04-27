@@ -1,10 +1,12 @@
 package api
 
 import (
+	"encoding/json"
+	"io"
 	"net/http"
 )
 
-type config struct {
+type Config struct {
 	Count    int    `json:"count"`
 	Next     string `json:"next"`
 	Previous any    `json:"previous"`
@@ -16,10 +18,20 @@ type config struct {
 
 const LOCATION_API_URL string = "https://pokeapi.co/api/v2/location-area"
 
-func fillConfig() (config, error) {
+func FillConfig() (Config, error) {
 	res, err := http.Get(LOCATION_API_URL)
 	if err != nil {
-		return config{}, err
+		return Config{}, err
 	}
 
+	locationData, err := io.ReadAll(res.Body)
+	if err != nil {
+		return Config{}, err
+	}
+	cfg := Config{}
+	err = json.Unmarshal(locationData, &cfg)
+	if err != nil {
+		return Config{}, err
+	}
+	return cfg, nil
 }

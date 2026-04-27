@@ -4,9 +4,15 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"pokedexcli/api"
 )
 
 func main() {
+
+	cfg, err := api.FillConfig()
+	if err != nil {
+		fmt.Printf("Error parsing config: %v", err)
+	}
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print("Pokedex > ")
@@ -14,9 +20,9 @@ func main() {
 		line := scanner.Text()
 		args := CleanInput(line)
 		cmd := args[0]
-		cliCmd, ok := getCommands()[cmd]
+		cliCmd, ok := GetCommands()[cmd]
 		if ok {
-			if err := cliCmd.callback(); err != nil {
+			if err := cliCmd.callback(&cfg); err != nil {
 				fmt.Fprintln(os.Stderr, err)
 			}
 		} else {
