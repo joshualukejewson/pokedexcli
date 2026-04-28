@@ -34,5 +34,10 @@ func GetCommands() map[string]clientCommand {
 			description: "Print a list of the next 20 locations",
 			callback:    commandMap,
 		},
+		"mapb": {
+			name:        "mapb",
+			description: "Print a list of the previous 20 locations",
+			callback:    commandMapBack,
+		},
 	}
 }

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -9,29 +10,50 @@ import (
 type Config struct {
 	Count    int    `json:"count"`
 	Next     string `json:"next"`
-	Previous any    `json:"previous"`
+	Previous string `json:"previous"`
 	Results  []struct {
 		Name string `json:"name"`
 		URL  string `json:"url"`
 	} `json:"results"`
 }
 
-const LOCATION_API_URL string = "https://pokeapi.co/api/v2/location-area"
-
-func FillConfig() (Config, error) {
-	res, err := http.Get(LOCATION_API_URL)
+func GetNext(cfg *Config) error {
+	newConfig := Config{}
+	res, err := http.Get(cfg.Next)
 	if err != nil {
-		return Config{}, err
+		return err
 	}
-
 	locationData, err := io.ReadAll(res.Body)
 	if err != nil {
-		return Config{}, err
+		return err
 	}
-	cfg := Config{}
-	err = json.Unmarshal(locationData, &cfg)
+	err = json.Unmarshal(locationData, &newConfig)
 	if err != nil {
-		return Config{}, err
+		return err
 	}
-	return cfg, nil
+	*cfg = newConfig
+	return nil
+}
+
+func GetPrevious(cfg *Config) error {
+
+	if cfg.Previous == "" {
+		return fmt.Errorf("you're on the first page")
+	}
+
+	newConfig := Config{}
+	res, err := http.Get(cfg.Previous)
+	if err != nil {
+		return err
+	}
+	locationData, err := io.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(locationData, &newConfig)
+	if err != nil {
+		return err
+	}
+	*cfg = newConfig
+	return nil
 }

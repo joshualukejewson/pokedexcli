@@ -7,11 +7,12 @@ import (
 	"pokedexcli/api"
 )
 
+const LOCATION_API_URL string = "https://pokeapi.co/api/v2/location-area"
+
 func main() {
 
-	cfg, err := api.FillConfig()
-	if err != nil {
-		fmt.Printf("Error parsing config: %v", err)
+	cfg := api.Config{
+		Next: LOCATION_API_URL,
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)

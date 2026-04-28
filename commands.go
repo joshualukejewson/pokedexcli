@@ -21,6 +21,22 @@ func commandHelp(cfg *api.Config) error {
 }
 
 func commandMap(cfg *api.Config) error {
+	err := api.GetNext(cfg)
+	if err != nil {
+		return err
+	}
+	for _, location := range cfg.Results {
+		fmt.Printf("%s\n", location.Name)
+	}
+	return nil
+}
+
+func commandMapBack(cfg *api.Config) error {
+	err := api.GetPrevious(cfg)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
 	for _, location := range cfg.Results {
 		fmt.Printf("%s\n", location.Name)
 	}
