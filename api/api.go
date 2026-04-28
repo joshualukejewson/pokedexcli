@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -36,10 +35,6 @@ func GetNext(cfg *Config) error {
 }
 
 func GetPrevious(cfg *Config) error {
-
-	if cfg.Previous == "" {
-		return fmt.Errorf("you're on the first page")
-	}
 
 	newConfig := Config{}
 	res, err := http.Get(cfg.Previous)

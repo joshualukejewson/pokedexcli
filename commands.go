@@ -32,10 +32,13 @@ func commandMap(cfg *api.Config) error {
 }
 
 func commandMapBack(cfg *api.Config) error {
+	if cfg.Previous == "" {
+		fmt.Println("you're on the first page")
+		return nil
+	}
 	err := api.GetPrevious(cfg)
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		return err
 	}
 	for _, location := range cfg.Results {
 		fmt.Printf("%s\n", location.Name)
